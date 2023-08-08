@@ -111,3 +111,36 @@ This docker-compose file will automatically create both containers on the same n
 Because I've created a Docker compose file, I can amend index.js to specify the location that the Redis server is running. I can do this by simply referring to the name of the server - *redis-server*.
 
 The default port of a Redis server is 6379. 
+
+### Updated index.js
+```
+const express = require('express');
+const redis = require('redis');
+
+const app = express();
+const client = redis.createClient({
+    host: 'redis-server'
+    port: 6379
+});
+client.set('visits', 0);
+
+app.get('/', (req, res) => {
+    client.get('visits', (err, visits) => {
+        res.send('Number of visits is ' + visits);
+        client.set('visits', parseInt(visits) + 1);
+    });
+});
+
+app.listen(8081, () => {
+    console.log('Listening on port 8081');
+});
+```
+
+In the visits folder, run `docker-compose up`.
+
+![Imgur](https://i.imgur.com/RyMmLKr.png)
+![Imgur](https://i.imgur.com/Ds5wi19.png)
+
+- A network has been created so that the containers can communicate with each other
+- A single instance of node-app service has been created
+- A single instance of redis-server service has been created
