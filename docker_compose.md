@@ -10,7 +10,7 @@ I want to be able to create a website that displays the number of visits to the 
 
 To implement the Node app I need to compose a javascript file, as well as a json file.
 
-## package.json
+### package.json
 ```
 {
     "dependencies": {
@@ -23,7 +23,7 @@ To implement the Node app I need to compose a javascript file, as well as a json
 }
 ```
 
-## index.js
+### Initial index.js
 ```
 const express = require('express');
 const redis = require('redis');
@@ -44,7 +44,7 @@ app.listen(8081, () => {
 });
 ```
 
-## Initial Dockerfile
+### Initial Dockerfile
 ```
 FROM node:alpine
 
@@ -80,3 +80,34 @@ When I open a new terminal to run `docker run ddoxton/visits` I still receive th
 This is because the Node App container and the Redis container don't automatically have a connection between them.
 
 Networking infrastructure needs to be set up between them. The easiest way to do this is using **Docker Compose**.
+
+## Docker Compose
+
+Docker compose will be done in a YAML file. Here are the steps I need:
+1. I want a container with the Redis server
+2. I want it made using the *redis* image
+3. I want a Node App container
+4. I want it made using the Dockerfile in the current directory
+5. I want to map port 8081 from the container to 4001 in my local machine
+
+### docker-compose.yml
+```
+version: '3'
+services:
+  redis-server:
+    image: 'redis'
+  node-app:
+    build: .
+    ports:
+      - "4001:8081"  
+```
+
+The service is a type of container. I am defining two services in this YAML file, and both these services take the form of two Docker containers.
+
+`build: .` is telling it to look inside the pwd for a Dockerfile and use that to build this image for the container.
+
+This docker-compose file will automatically create both containers on the same network and they'll have free access to communicate with each other.
+
+Because I've created a Docker compose file, I can amend index.js to specify the location that the Redis server is running. I can do this by simply referring to the name of the server - *redis-server*.
+
+The default port of a Redis server is 6379. 
