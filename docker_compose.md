@@ -144,3 +144,20 @@ In the visits folder, run `docker-compose up`.
 - A network has been created so that the containers can communicate with each other
 - A single instance of node-app service has been created
 - A single instance of redis-server service has been created
+
+## Troubleshooting
+- `Unexpected identifier 'port'` 
+Unknown what caused this issue. Amendments made:
+1. docker-compose.yml changed to compose.yaml
+2. Changed Redis version in package.json to 3.1.2
+3. Comma added in index.js after `host: 'redis-server'`
+4. Changed Redis port to 6380. Didn't work, changed back to 6379.
+5. Ran again using `docker-compose up --build`
+
+![Imgur](https://i.imgur.com/lk7zkdG.png)
+
+Now if I go to localhost:4001 my app is up and running.
+
+![Imgur](https://i.imgur.com/hWf2wib.png)
+
+Hitting *Refresh* increases the visit count.

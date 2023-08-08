@@ -28,6 +28,7 @@ docker system prune
 ```
 docker exec -it <container id> <command>
 ```
+
 `-it` allows us to provide input into the container.
 ![Imgur](https://i.imgur.com/usSk1HO.png)
 
@@ -36,4 +37,5 @@ docker exec -it <container id> <command>
 docker exec -it <container id> sh
 ```
 ![Imgur](https://i.imgur.com/wHM1bBD.png)
+
 
