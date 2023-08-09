@@ -161,3 +161,17 @@ Now if I go to localhost:4001 my app is up and running.
 ![Imgur](https://i.imgur.com/hWf2wib.png)
 
 Hitting *Refresh* increases the visit count.
+
+## Starting and Stopping
+
+`docker-compose up -d` starts the multiple Docker containers at the same time.
+
+![Imgur](https://i.imgur.com/gjASoDT.png)
+
+`docker-compose down` stops the containers and the network.
+
+![Imgur](https://i.imgur.com/ozT3lkp.png)
+
+When the containters are running I can open a new window and rin `docker-compose ps` to see the status and details of the containters.
+
+![Imgur](https://i.imgur.com/OaUPpuM.png)
