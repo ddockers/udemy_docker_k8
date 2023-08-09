@@ -175,3 +175,5 @@ Hitting *Refresh* increases the visit count.
 When the containters are running I can open a new window and rin `docker-compose ps` to see the status and details of the containters.
 
 ![Imgur](https://i.imgur.com/OaUPpuM.png)
+
+The command needs to be run in the same directory as the compose.yaml file.
