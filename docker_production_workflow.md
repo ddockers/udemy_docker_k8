@@ -107,7 +107,6 @@ There needs to be a way where I can update the source code and the app updates i
 
 The volume is going to set up a reference that's going to point back to my local machine to access the folders in my local machine.
 
-![Alt text](image.png)
 
 I'm essentially setting up mapping from a folder in the temp container to a folder in my local computer.
 
@@ -146,7 +145,14 @@ I need to specify the context since the Dockerfile isn't called Dockerfile.
 
 I can run `docker-compose up` to run the container.
 
-### Troubleshooting for Windows (ignore since I'm not currently using Ubuntu)
+## Troubleshooting
+This all works, but the app doesn't update in real time when I edit the source code.
+
+Steps attemped:
+- Amending the compose.yaml fole to edit the volume mapping. Under `volumes:`, changed `- .:/app` to `- ./src:/app`. App didn't work at all since build files are in frontend/
+- In compose.yaml, cchanged the name of app from `react-app` to `web` - still doesn't update in real time
+
+### (ignore since I'm not currently using Ubuntu)Troubleshooting for Windows 
 The frontend directory needs to be copied from my local machine to Ubuntu. I have done this by:
 1. Opening Ubuntu
 2. Running `explorer.exe .` - **remember the dot at the end!**
