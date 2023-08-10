@@ -110,3 +110,44 @@ The volume is going to set up a reference that's going to point back to my local
 ![Alt text](image.png)
 
 I'm essentially setting up mapping from a folder in the temp container to a folder in my local computer.
+
+![Imgur](https://i.imgur.com/ElFa4sj.png)
+
+In my case, I ran:
+```
+docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app f70403cecccba5d118c8ceef2a40c7462fe0e10aa741422646c021fda37f743b
+```
+
+This started up the container and it's now running on localhost:3000 with my Kipo image.
+
+Now, if I go to the source code and amend it, the page updates in real time!
+
+## Doing the above with Docker Compose
+
+Instead of using that ridiculously long command, I can create a Docker Compose file with the post settings and the volumes we need to encode inside the container.
+
+In the pwd, I've created a compose.yaml file. 
+
+```
+version: '3'
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - .:/app
+```
+
+I need to specify the context since the Dockerfile isn't called Dockerfile. 
+
+I can run `docker-compose up` to run the container.
+
+### Troubleshooting for Windows (ignore since I'm not currently using Ubuntu)
+The frontend directory needs to be copied from my local machine to Ubuntu. I have done this by:
+1. Opening Ubuntu
+2. Running `explorer.exe .` - **remember the dot at the end!**
+3. The above step opens up the home directory of Ubuntu in Windows Explorer. Drag and drop frontend/ directly from local folder to Ubuntu
