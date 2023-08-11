@@ -151,6 +151,9 @@ This all works, but the app doesn't update in real time when I edit the source c
 Steps attemped:
 - Amending the compose.yaml fole to edit the volume mapping. Under `volumes:`, changed `- .:/app` to `- ./src:/app`. App didn't work at all since build files are in frontend/
 - In compose.yaml, cchanged the name of app from `react-app` to `web` - still doesn't update in real time
+- To stop and kill the containers I ran `docker-compose down -v --rmi "all"` and ran `docker-compose up` again - same as above
+- I ran `docker-compose down -v --rmi "all"` and amended `- .:/app` to both `- .:/app:cached` and `- .:/app:delegated` (two separate tests) - same as above
+- I ran `docker-compose down -v --rmi "all"` then `docker-compose build --no-cache`, then `docker-compose up` - same as above
 
 ### (ignore since I'm not currently using Ubuntu)Troubleshooting for Windows 
 The frontend directory needs to be copied from my local machine to Ubuntu. I have done this by:
