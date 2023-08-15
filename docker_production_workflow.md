@@ -63,7 +63,7 @@ The `docker build` command needs to be amended as there is no file called Docker
 I instead need to run:
 
 ```
-docker build -f Dockerfile.dev
+docker build -f Dockerfile.dev .
 ```
 to specify the file I want to build.
 
@@ -154,6 +154,35 @@ Steps attemped:
 - To stop and kill the containers I ran `docker-compose down -v --rmi "all"` and ran `docker-compose up` again - same as above
 - I ran `docker-compose down -v --rmi "all"` and amended `- .:/app` to both `- .:/app:cached` and `- .:/app:delegated` (two separate tests) - same as above
 - I ran `docker-compose down -v --rmi "all"` then `docker-compose build --no-cache`, then `docker-compose up` - same as above
+- In `frontend/` I created a `.env` file and added the following:
+  ```
+  REACT_APP_TITLE=How To React
+  FAST_REFRESH=false
+  ```
+  In Dockerfile.dev I added the following:
+  ```
+  ARG REACT_APP_TITLE
+
+  ARG FAST_REFRESH
+  ``` 
+  I amended `compose.yaml` to this:
+  ```
+  version: '3'
+  services:
+    react-app:
+      build:
+        context: .
+        dockerfile: Dockerfile.dev
+      environment:
+        - REACT_APP_TITLE
+        - FAST_REFRESH
+      ports:
+        - "3000:3000"
+      volumes:
+        - /app/node_modules
+        - .:/app
+  ```
+  **Still DOESN'T WORK**
 
 ### (ignore since I'm not currently using Ubuntu)Troubleshooting for Windows 
 The frontend directory needs to be copied from my local machine to Ubuntu. I have done this by:
