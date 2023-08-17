@@ -184,8 +184,44 @@ Steps attemped:
   ```
   **Still DOESN'T WORK**
 
-### (ignore since I'm not currently using Ubuntu)Troubleshooting for Windows 
-The frontend directory needs to be copied from my local machine to Ubuntu. I have done this by:
-1. Opening Ubuntu
-2. Running `explorer.exe .` - **remember the dot at the end!**
-3. The above step opens up the home directory of Ubuntu in Windows Explorer. Drag and drop frontend/ directly from local folder to Ubuntu
+**The app itself works. However, I am unable to get the app to automatically update when I amend the app.js file.**
+
+## Multi-Step Build with Nginx
+
+I can create a multi-step build if I want to use different base images.
+
+I want to use node:alpine for the build phase and nginx for the run phase.
+
+![Imgur](https://i.imgur.com/u0Ysr2N.png)
+
+I can put both phases in the same Dockerfile.
+
+I've created a Dockerfile in `frontend/`.
+
+```
+FROM node:16-alpine as builder
+
+WORKDIR '/app'
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+FROM nginx
+
+COPY --from=builder /app/build /usr/share/nginx/html
+```
+
+- `as builder` means I've given the base image a tag called *builder*
+- To specify the start of the second phase, I just need to put in a second `FROM` statement
+- `--from=builder` states that I want to copy the output of the first phase to the default location in the nginx container
+
+I can build this image by running `docker build .`.
+
+Then I can run the container using `docker run -p 8080:80 <image id>`.
+
+This maps port 8080 on my local machine to the default port of Nginx, which is 80.
