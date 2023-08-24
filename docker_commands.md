@@ -1,4 +1,9 @@
 # Manipulating Containers with the Docker Client
+- Build and tag an image
+```
+docker build -t <docker ID>/<repo/project name>:<version>
+```
+e.g. `docker build -t ddoxton/tech241-node-app:latest`
 
 - Create and run a container using an image:
 ```
