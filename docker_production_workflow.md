@@ -225,3 +225,32 @@ I can build this image by running `docker build .`.
 Then I can run the container using `docker run -p 8080:80 <image id>`.
 
 This maps port 8080 on my local machine to the default port of Nginx, which is 80.
+
+# Using Jenkins
+
+The CI tool in the codealong is *Travis CI*. However, I'm unable to use this tool as it's no longer free. I'll attempt to complete the project using Jenkins.
+
+In `frontend/` I ran the following command:
+
+```
+docker run -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts-jdk11
+```
+
+I got this command from the *jenkins/jenkins* image on the Docker Hub.
+
+Once the image was pulled, I received a password. I then went to localhost:8080 and entered the password into the Jenkins homepage.
+
+Instead of a Travis YAML file, I'll need to do the configuration in a Jenkinsfile.
+
+### .travis.yml file
+```
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ddoxton/docker-react -f Dockerfile.dev .
+
+script:
+  - docker tin -e CI=true ddoxton/docker-react npm run test
+```
