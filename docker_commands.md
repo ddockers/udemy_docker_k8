@@ -1,5 +1,5 @@
 # Manipulating Containers with the Docker Client
-- Build and tag an image
+- Build and tag an image:
 ```
 docker build -t <docker ID>/<repo/project name>:<version> .
 ```

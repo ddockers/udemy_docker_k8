@@ -242,6 +242,12 @@ Once the image was pulled, I received a password. I then went to localhost:8080 
 
 Instead of a Travis YAML file, I'll need to do the configuration in a Jenkinsfile.
 
+### Troubleshooting
+
+I've had to keep rebuilding and rerunning the image. I've now tagged it as `ddoxton/react-app:latest`.
+
+I should now be able to build and run it easily.
+
 ### .travis.yml file
 ```
 sudo: required
@@ -254,3 +260,9 @@ before_install:
 script:
   - docker tin -e CI=true ddoxton/docker-react npm run test
 ```
+
+## GitHub Branches
+
+I need to have a *main* and *dev* branch for my pipeline. 
+
+I created a new branch called *dev* by going to my React App repo, clicking *main* and typing *dev*.
