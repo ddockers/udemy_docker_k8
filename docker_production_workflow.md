@@ -242,11 +242,6 @@ Once the image was pulled, I received a password. I then went to localhost:8080 
 
 Instead of a Travis YAML file, I'll need to do the configuration in a Jenkinsfile.
 
-### Troubleshooting
-
-I've had to keep rebuilding and rerunning the image. I've now tagged it as `ddoxton/react-app:latest`.
-
-I should now be able to build and run it easily.
 
 ### .travis.yml file
 ```
@@ -266,3 +261,51 @@ script:
 I need to have a *main* and *dev* branch for my pipeline. 
 
 I created a new branch called *dev* by going to my React App repo, clicking *main* and typing *dev*.
+
+## Test Jenkinsfile
+I ran `git checkout -b dev` to create a dev branch in GitBash. I don't know why the above step didn't automatically create it.
+
+I created the below Jenkinsfile in `frontend/`:
+
+```
+pipeline {
+    agent any
+    options {
+      skipDefaultCheckout(true)
+    }
+    stages {
+        stage("build") {
+            steps {
+              cleanWs()
+              checkout scm
+                echo 'building the application...'
+            }
+        }
+        stage("test") {
+            steps {
+                echo 'testing the application...'
+            }
+        }
+        stage("deploy") {
+            steps {
+                echo 'deploying the application...'
+            }
+        }
+    }
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
+    }                           
+}
+```
+
+I then ran `git add .`, `git commit` and then `git push --set-upstream origin dev`.
+
+I went to GitHub and manually merged push and pull requests between the main and dev branches.
