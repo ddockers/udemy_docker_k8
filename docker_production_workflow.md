@@ -309,3 +309,19 @@ pipeline {
 I then ran `git add .`, `git commit` and then `git push --set-upstream origin dev`.
 
 I went to GitHub and manually merged push and pull requests between the main and dev branches.
+
+### Troubleshooting - Git branches
+All of the extra configuration above messed up the push requests.
+
+![Imgur](https://i.imgur.com/lfOsUJt.png)
+![Imgur](https://i.imgur.com/mwbB07t.png)
+
+I deleted the `dev` branch from GitHub. In GitBash I ren `git checkout dev` to make sure I was in the `dev` branch.
+
+Then `git push`, then `git push --set upstream origin dev`.
+
+![Imgur](https://i.imgur.com/lfOsUJt.png)
+
+### Troubleshooting - *'Jenkinsfile' not found*
+
+My file was called `jenkinsfile`, instead of `Jenkinsfile`. Changed config to *Script path - jenkinsfile*.
