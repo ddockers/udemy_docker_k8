@@ -254,6 +254,18 @@ before_install:
 
 script:
   - docker tin -e CI=true ddoxton/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-west-1"
+  app: "deanne-react-app-jenkins"
+  environment: "Deanne-react-app-jenkins-env"
+  bucket_name: "elasticbeanstalk-eu-west-1-745771044485"
+  bucket_path: "deanne-react-app-jenkins"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
 ```
 
 ## GitHub Branches
