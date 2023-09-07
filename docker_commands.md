@@ -17,6 +17,23 @@ docker run <image name> <command>
 
 Some commands won't work with certain images. Busybox has `echo` and `ls` that exist in the file system image.
 
+- Create, run and **name** an image (Nginx in this example):
+```
+docker container run --publish 80:80 --name webhost nginx
+```
+Running `docker container ls` shows that the container's name is now `webhost`.
+
+![Imgur](https://i.imgur.com/Km5kemJ.png)
+
+I can run commands specifically on this container more easily. For example:
+
+```
+docker container logs webhost
+
+docker container top webhost
+
+docker container rm -f webhost
+```
 - List all running containers:
 ```
 docker ps
