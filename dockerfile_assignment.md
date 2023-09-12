@@ -72,6 +72,6 @@ Then, run the container.
 docker container run -d -p 80:3000 --name node-test ddoxton/udemy-dockerfile-assignment-1
 ```
 
-Container us running on localhost.
+Container is running on localhost.
 
 ![Imgur](https://i.imgur.com/F8oWrFd.png)

@@ -81,6 +81,19 @@ docker container stats
 ```
 ![Imgur](https://i.imgur.com/e1AhIqV.png)
 
+- Stop a running container:
+
+```
+docker container stop <container name/ID>
+```
+
+- Remove stopped container:
+
+```
+docker container rm <container name/ID>
+```
+
+# Networks
 - View Docker networks:
 
 ```
@@ -120,3 +133,67 @@ Then `docker network inspect my_app_net` can be run to see the container running
 Another container with a new name can be run on the same network. For example, running `docker container run -d --name my_nginx --network my_app_net nginx` creates a container called `my_nginx` on the network `my_app_net`.
 
 ![Imgur](https://i.imgur.com/SYvVb8T.png)
+
+# Docker Prune
+- View space usage:
+
+```
+docker system df
+```
+
+- Clean up dangling images:
+
+```
+docker image prune
+```
+
+- Clean up everything not currently in use:
+
+```
+docker system prune
+```
+
+- Clean up entire system:
+
+```
+docker system prune -a
+```
+
+- Clean up volumes:
+
+```
+docker system prune --volumes
+```
+
+# Volumes
+
+- View volumes:
+
+```
+docker volume ls
+```
+
+![Imgur](https://i.imgur.com/fx79GiD.png)
+
+- Inspect a volume:
+
+```
+docker volume inspect <volume name>
+```
+
+![Imgur](https://i.imgur.com/BZfODMB.png)
+
+
+- Name a container volume:
+
+```
+docker container run <...> -v <volume name>:<volume location>
+```
+
+The container volume location can be found under `Config` when running `docker container inspect <name of container>`
+
+![Imgur](https://i.imgur.com/3fZpifb.png)
+
+![Imgur](https://i.imgur.com/oxu8xgG.png)
+
+![Imgur](https://i.imgur.com/5Bk37e9.png)
