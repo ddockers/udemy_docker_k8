@@ -190,10 +190,53 @@ docker volume inspect <volume name>
 docker container run <...> -v <volume name>:<volume location>
 ```
 
-The container volume location can be found under `Config` when running `docker container inspect <name of container>`
+The container volume location can be found under `Config` when running `docker container inspect <name of container>`, or it can be found on the Docker Hub documentation for the image.
 
 ![Imgur](https://i.imgur.com/3fZpifb.png)
 
 ![Imgur](https://i.imgur.com/oxu8xgG.png)
 
 ![Imgur](https://i.imgur.com/5Bk37e9.png)
+
+# Docker Swarm
+`Service` in a swarm replaces `docker run`.
+
+- Initialise a Docker swarm:
+
+```
+docker swarm init
+```
+
+A service can now be started , and the swarm will orchestrate how it needs to be laid out.
+
+For example:
+
+```
+docker service create alpine ping 8.8.8.8
+```
+
+![Imgur](https://i.imgur.com/9nshF6A.png)
+
+![Imgur](https://i.imgur.com/6wJc0tk.png)
+
+`REPLICAS` is how many are running/how many I have specified to run. The orchestrator makes those numbers match.
+
+- Scale up replicas:
+
+```
+docker service update <service ID/name> --replicas <no. of replicas>
+```
+
+![Imgur](https://i.imgur.com/r5jLXH8.png)
+
+- View replicas:
+
+```
+docker service ps <service ID/name>
+```
+
+![Imgur](https://i.imgur.com/iJ9BeZy.png)
+
+The swarm will automatically launch a new service if a container that is currently running a service is removed.
+
+![Imgur](https://i.imgur.com/IR8XqaR.png)
