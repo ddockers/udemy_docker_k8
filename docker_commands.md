@@ -240,3 +240,12 @@ docker service ps <service ID/name>
 The swarm will automatically launch a new service if a container that is currently running a service is removed.
 
 ![Imgur](https://i.imgur.com/IR8XqaR.png)
+
+To remove the containers permanently, the service needs to be removed.
+
+- Remove a service:
+
+```
+docker service rm <service ID/name>
+```
+
