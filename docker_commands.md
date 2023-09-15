@@ -249,3 +249,44 @@ To remove the containers permanently, the service needs to be removed.
 docker service rm <service ID/name>
 ```
 
+# Multipass
+
+With Multipass, multiple Ubuntu VMs/nodes can be launched directly in GitBash.
+
+- Start a Multipass instance:
+
+```
+multipass launch
+```
+
+- View Multipass instances:
+
+```
+multipass ls
+```
+
+![Imgur](https://i.imgur.com/Ju0o6jn.png) 
+
+- Open a shell inside an instance:
+
+```
+multipass shell <name of instance>
+```
+
+Docker needs to be installed on the instances. 
+
+Full installation commands here: <https://get.docker.com/>
+
+```
+curl -fsSL https://get.docker.com -o install-docker.sh
+
+sudo sh install-docker.sh
+```
+
+`sudo` needs to be used when running Docker commands. 
+
+Initiate a swarm on one instance by running `sudo docker swarm init`.
+
+![Imgur](https://i.imgur.com/MtMJ4Sy.png)
+
+Otner nodes can be added to the swarm by running the command printed on the screen with `sudo`.
