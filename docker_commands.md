@@ -259,6 +259,11 @@ With Multipass, multiple Ubuntu VMs/nodes can be launched directly in GitBash.
 multipass launch
 ```
 
+- Launch a named instsnce:
+
+```
+multipass launch -n <name of instance>
+```
 - View Multipass instances:
 
 ```
@@ -266,6 +271,14 @@ multipass ls
 ```
 
 ![Imgur](https://i.imgur.com/Ju0o6jn.png) 
+
+- Run commands inside an instance:
+
+```
+multipass exec <name of instance> <command>
+```
+
+![Imgur](https://i.imgur.com/QegZjP5.png)
 
 - Open a shell inside an instance:
 
@@ -290,3 +303,66 @@ Initiate a swarm on one instance by running `sudo docker swarm init`.
 ![Imgur](https://i.imgur.com/MtMJ4Sy.png)
 
 Otner nodes can be added to the swarm by running the command printed on the screen with `sudo`.
+
+
+## Troubleshooting
+**Error 1**
+```
+sudo docker swarm join-token worker
+
+SWMTKN-1-1ofu1fryp147sgyic2mm5xhvvoodw1br5oyzzg4sqnyuib1yri-b4yqb9fwx7ocegl89ngkbc48a 10.0.2.15:2377
+```
+**Error 2**
+```
+Error response from daemon: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp 10.0.2.15:2377: connect: connection refused"
+```
+
+```
+docker swarm join --token SWMTKN-1-06p8u7imhx04bqvf9jvl2gvdmqaji4bxwqgpy4g6crvj6noof1-bekjs5l37frw9nr6f46457lo8 10.0.2.15:2377
+permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/swarm/join": dial unix /var/run/docker.sock: connect: permission denied
+```
+**Solution 1**
+Create a YAML file with Docker installation instructions to use with `cloud-init`. `usermod -aG docker ubuntu` gives the user (ubuntu) permissions to run Docker.
+
+**Script 1**
+```
+#cloud-config
+package_update: true
+package_upgrade: true
+runcmd:
+  - curl -sSL https://get.docker.com/ | sh
+  - usermod -aG docker ubuntu
+```
+
+Run:
+```
+multipass launch -n sonic --cloud-init <path to>multipass_vm_scr.yml
+```
+
+**Error 3**
+```
+launch failed: The following errors occurred:
+timed out waiting for initialization to complete
+```
+
+**Script 2**
+```
+#cloud-config
+package_update: true
+package_upgrade: true
+runcmd:
+  - curl -fsSL https://get.docker.com -o install-docker.sh
+  - sudo sh install-docker.sh
+  - usermod -aG docker ubuntu
+```
+
+**Error 4**
+Same as above.
+
+## Solution
+In multipass_vm_scr.yml script, update/upgrade were removed and single quotes added.
+```
+runcmd:
+  - 'curl -sSL https://get.docker.com/ | sh'
+  - 'usermod -aG docker ubuntu'
+```
