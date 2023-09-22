@@ -366,3 +366,16 @@ runcmd:
   - 'curl -sSL https://get.docker.com/ | sh'
   - 'usermod -aG docker ubuntu'
 ```
+
+![Imgur](https://i.imgur.com/dgefbYu.png)
+
+**Error 5**
+Same as Error 2.
+
+## Solution
+Run `sudo usermod -aG docker ubuntu`, then log out and log back in.
+
+**Error 6**
+Same as above.
+
+### Now that I have been able to launch an instance with Docker installed, I have been unable to get another instance to join the swarm.
