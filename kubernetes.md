@@ -125,3 +125,53 @@ The name of the pod can be found my running `kubectl get pods`.
 ![Alt text](image.png)
 
 `kubectl describe` can also be used on pods and nodes.
+
+## Watching
+
+`kubectl get pods -w` lets you see realtime status/changes to resources.
+
+Running the above command and then `kubectl gelete pod <name of pod>` in another terminal window shows this:
+
+![Imgur](https://i.imgur.com/J8U9eNV.png)
+
+The old pod terminates and a new pod starts up.
+
+`kubectl get events --watch-only` shows only new events on the pod. 
+
+Running the above command and deleting a pod in another terminal window shows this:
+
+![Imgur](https://i.imgur.com/k1A3j88.png)
+
+## Container Logs
+
+- Get a container's logs (first container only)
+
+```
+kubectl logs deploy/<name of deploy>
+```
+
+- Follow new log entries, starting with the latest log line:
+
+```
+kubectl logs deploy/<name of deploy> --follow --tail 1
+```
+
+- Get a specific container's logs in a pod:
+
+```
+kubectl logs pod/<name of pod> -c <container>
+```
+
+The container can be found using the `describe` command.
+
+- Get logs for all containers in a pod:
+
+```
+kubectl logs pod/<name of pod> --all-containers=true
+```
+
+- Get multiple pod logs:
+
+```
+kubectl logs -l app=my-apache
+```
