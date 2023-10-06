@@ -31,7 +31,7 @@ If the browser wants to access a backend API (to retrieve values), the traffic i
 
 ## Setup
 
-`mkdir` multi_cont_app -> complex -> worker
+1. `mkdir` multi_cont_app -> complex -> worker
 
 In the worker directory, add the following:
 
@@ -81,4 +81,117 @@ module.exports = {
   redisHost: process.env.REDIS_HOST,
   redisPort: process.env.REDIS_PORT,
 };
+```
+
+2. `mkdir` multi_cont_app -> complex -> server
+
+`package.json`
+
+```
+{
+  "dependencies": {
+    "express": "4.16.3",
+    "pg": "8.0.3",
+    "redis": "2.8.0",
+    "cors": "2.8.4",
+    "nodemon": "1.18.3",
+    "body-parser": "*"
+  },
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node index.js"
+  }
+}
+```
+
+`keys.js`
+
+```
+module.exports = {
+  redisHost: process.env.REDIS_HOST,
+  redisPort: process.env.REDIS_PORT,
+  pgUser: process.env.PGUSER,
+  pgHost: process.env.PGHOST,
+  pgDatabase: process.env.PGDATABASE,
+  pgPassword: process.env.PGPASSWORD,
+  pgPort: process.env.PGPORT,
+};
+```
+
+`index.js`
+
+```
+const keys = require('./keys');
+
+// Express App Setup
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+// Postgres Client Setup
+const { Pool } = require('pg');
+const pgClient = new Pool({
+  user: keys.pgUser,
+  host: keys.pgHost,
+  database: keys.pgDatabase,
+  password: keys.pgPassword,
+  port: keys.pgPort,
+  ssl: { rejectUnauthorized: false },
+});
+
+pgClient.on('connect', (client) => {
+  client
+    .query('CREATE TABLE IF NOT EXISTS values (number INT)')
+    .catch((err) => console.error(err));
+});
+
+// Redis Client Setup
+const redis = require('redis');
+const redisClient = redis.createClient({
+  host: keys.redisHost,
+  port: keys.redisPort,
+  retry_strategy: () => 1000,
+});
+const redisPublisher = redisClient.duplicate();
+
+// Express route handlers
+
+app.get('/', (req, res) => {
+  res.send('Hi');
+});
+
+app.get('/values/all', async (req, res) => {
+  const values = await pgClient.query('SELECT * from values');
+
+  res.send(values.rows);
+});
+
+app.get('/values/current', async (req, res) => {
+  redisClient.hgetall('values', (err, values) => {
+    res.send(values);
+  });
+});
+
+app.post('/values', async (req, res) => {
+  const index = req.body.index;
+
+  if (parseInt(index) > 40) {
+    return res.status(422).send('Index too high');
+  }
+
+  redisClient.hset('values', index, 'Nothing yet!');
+  redisPublisher.publish('insert', index);
+  pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
+
+  res.send({ working: true });
+});
+
+app.listen(5000, (err) => {
+  console.log('Listening');
+});
+
 ```
