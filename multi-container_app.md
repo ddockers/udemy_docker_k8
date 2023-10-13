@@ -195,3 +195,37 @@ app.listen(5000, (err) => {
 });
 
 ```
+
+## Dockerising the React App
+
+The React App code has been downloaded and saved in `complex -> client`. Inside `client` is where `src/` is located.
+
+Dev Dockerfiles need to be made for the below.
+
+![Imgur](https://i.imgur.com/zM2rXaG.png)
+
+If changes are made to the code, we need to make sure it works before pushing to production.
+
+![Imgur](https://i.imgur.com/2sOlpRN.png)
+
+The fact that the Docker compose shares files means that if a change is made to the source code, the image does not need to be built again from scratch.
+
+### Client Dockerfile.dev
+Inside `client` create the below Dockerfile.dev:
+
+```
+FROM node:16-alpine
+WORKDIR '/app'
+COPY ./package.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "start"]
+```
+
+`cd` into `client` and run:
+
+```
+docker build -f Dockerfile.dev .
+```
+
+Run the created container using `docker run <container ID>`
