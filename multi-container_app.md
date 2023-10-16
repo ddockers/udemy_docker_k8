@@ -228,4 +228,21 @@ CMD ["npm", "run", "start"]
 docker build -f Dockerfile.dev .
 ```
 
-Run the created container using `docker run <container ID>`
+Run the created container using `docker run <container ID>`.
+
+### Server Dockerfile.dev
+
+Inside `server` create the following Dockerfile.dev:
+
+```
+FROM node:14.14.0-alpine
+WORKDIR "/app"
+COPY ./package.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "dev"]
+```
+
+### Worker Dockerfile.dev
+
+Same as above.
