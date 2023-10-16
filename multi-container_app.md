@@ -245,4 +245,99 @@ CMD ["npm", "run", "dev"]
 
 ### Worker Dockerfile.dev
 
-Same as above.
+Same as above. 
+
+## Docker Compose
+
+Refer back to architecture:
+
+![Imgur](https://i.imgur.com/UJHsOD8.png)
+
+Requirements:
+- React server needs to be available on a given port
+- Express server needs to be available on a given port
+- Worker needs to be able to connect to Redis
+- The correct environment variables for Redis and Postgress need to be provided to the express server and the worker
+
+![Imgur](https://i.imgur.com/8fP1v9p.png)
+
+Specify build - what Dockerfile to use?
+Specify volumes - if the source code is changed the container code needs to update as well
+Specify env variables - env variables can be seen in server -> keys.js
+
+```
+module.exports = {
+  redisHost: process.env.REDIS_HOST,
+  redisPort: process.env.REDIS_PORT,
+  pgUser: process.env.PGUSER,
+  pgHost: process.env.PGHOST,
+  pgDatabase: process.env.PGDATABASE,
+  pgPassword: process.env.PGPASSWORD,
+  pgPort: process.env.PGPORT,
+};
+```
+
+The server relies on the env variables to decide how to connect to instance of Redis and Postgres server.
+
+Inside `complex` create `docker-compose.yml`.
+
+### Nginx
+Nginx is used to route to the correct server. 
+
+Nginx redirects API requests to the express server and other requests to the react server.
+
+![Imgur](https://i.imgur.com/joPHMzq.png)
+
+A folder called `nginx` needs to be added to `complex`. Here is where the nginx configuration will be.
+
+![Imgur](https://i.imgur.com/CNldHjU.png)
+
+### docker-compose.yml
+
+```
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+  redis:
+    image: 'redis:latest'
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes: 
+      - /app/node_modules
+      - ./client:app
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+```
