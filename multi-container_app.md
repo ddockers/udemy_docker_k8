@@ -295,26 +295,28 @@ A folder called `nginx` needs to be added to `complex`. Here is where the nginx 
 ### docker-compose.yml
 
 ```
-version: '3'
+version: "3"
 services:
   postgres:
-    image: 'postgres:latest'
+    image: "postgres:latest"
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
   redis:
-    image: 'redis:latest'
+    image: "redis:latest"
   nginx:
     restart: always
     build:
       dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
-      - '3050:80'
+      - "3050:80"
   api:
     build:
       dockerfile: Dockerfile.dev
       context: ./server
     volumes:
       - /app/node_modules
-      - ./server:app
+      - ./server:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -327,17 +329,35 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
-    volumes: 
+    volumes:
       - /app/node_modules
-      - ./client:app
+      - ./client:/app
   worker:
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
     volumes:
       - /app/node_modules
-      - ./worker:app
+      - ./worker:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 ```
+
+## Starting Docker Compose
+
+`cd` into `complex`.
+
+Run:
+
+```
+docker-compose up --build
+```
+
+Since Nginx is port mapped locally to port 3050, visiting localhost:3050 displays this:
+
+![Imgur](https://i.imgur.com/NKqbPcj.png)
+
+But, after a while, this appears:
+
+![Imgur](https://i.imgur.com/0EouJcl.png)
