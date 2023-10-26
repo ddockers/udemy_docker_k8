@@ -358,6 +358,6 @@ Since Nginx is port mapped locally to port 3050, visiting localhost:3050 display
 
 ![Imgur](https://i.imgur.com/NKqbPcj.png)
 
-But, after a while, this appears:
+I can enter an index, hit refresh and the corresponding Fibonacci value will be displayed.
 
-![Imgur](https://i.imgur.com/0EouJcl.png)
+![Imgur](https://i.imgur.com/JrhUuH2.png)
