@@ -45,3 +45,4 @@ This is exactly the same as the nginx Dockerfile.dev file.
 FROM nginx
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 ```
+
