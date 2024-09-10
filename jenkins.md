@@ -34,4 +34,4 @@ I am building a freestyle project called *Hello - freestyle*.
 
 Go to *Build Steps* and select *Execute Shell*. Then run an `echo` command.
 
-![Imgur](https://imgur.com/nsKF7g3)
+![Imgur](https://i.imgur.com/nsKF7g3.png)
