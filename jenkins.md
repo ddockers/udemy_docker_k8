@@ -28,10 +28,36 @@ Run the following comand to terminate Jenkins and to remove all volumes and imag
 
 `docker compose down --volumes --rmi all `
 
-## Basic Jenkins Job
+## Basic Jenkins Freestyle Job
 
 I am building a freestyle project called *Hello - freestyle*.
 
 Go to *Build Steps* and select *Execute Shell*. Then run an `echo` command.
 
 ![Imgur](https://i.imgur.com/nsKF7g3.png)
+
+Save.
+
+The project is now in the dashboard. 
+
+![Imgur](https://i.imgur.com/iGVBkte.png)
+
+For the project to run, click on the project and select *Build Now*.
+
+![Imgur](https://i.imgur.com/CObfc0P.png)
+
+The console output is displayed in the build history of the project.
+
+![Imgur](https://i.imgur.com/drgCu1G.png)
+
+## Basic Jenkins Pipeline Job
+
+I am creating a new pipeline project called *Hello - pipeline*.
+
+A generic Hello World pipeline script can be created that looks like this:
+
+![Imgur](https://imgur.com/BmZCIKX.png)
+
+Save and build now. Here is the console output:
+
+![Imgur](https://imgur.com/ay0E9P3.png)
