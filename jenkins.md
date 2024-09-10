@@ -61,3 +61,12 @@ A generic Hello World pipeline script can be created that looks like this:
 Save and build now. Here is the console output:
 
 ![Imgur](https://imgur.com/ay0E9P3.png)
+
+The pipeline is used to keep track of changes. Instead of ```echo 'Hello World' ``` I can chance it to:
+
+```
+sh 'echo "Hello World"'
+sh 'whoami'
+```
+
+This creates a new build and I can see the difference between each build.
