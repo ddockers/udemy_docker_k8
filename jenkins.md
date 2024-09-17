@@ -70,3 +70,64 @@ sh 'whoami'
 ```
 
 This creates a new build and I can see the difference between each build.
+
+## Laptop Assembly Pipeline
+
+Create a new job called *laptop assembly*.
+
+Navigate to *Pipeline* and select the Hello World sample to give us the structure we need.
+
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+```
+
+Change `Hello` stage to `Build` stage. When building the laptop, we want to store everything in a directory.Then, we need to make a file called `computer.txt` that will be stored in the `build` directory.
+
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building a new laptop...'
+                sh 'mkdir build'
+                sh 'touch build/computer.txt'
+                sh 'echo "Mainboard" >> build/computer.txt'
+            }
+        }
+    }
+}
+```
+
+`sh 'echo "Mainboard" >> build/computer.txt'` is the command to append the text *Mainboard* to the file *computer.txt* in the *build* dorectory.
+
+Save and build now.
+
+![Imgur](https://imgur.com/4GWe9mB.png)
+
+There is no Jenkins output to the build regarding the printing of *Mainboard*. 
+
+Configure build and add `sh 'cat build/computer.txt'`
+
+The build failed because:
+
+![Imgur](https://imgur.com/p3zqH0p.png)
+
+Configure.
+
+Change mkdir line to `sh 'mkdir -p build'`. `-p` creates the directory and any necessary parent directories.
+
+Build is successful. 
+
+![Imgur](https://i.imgur.com/o7Ae5yJ.png)
