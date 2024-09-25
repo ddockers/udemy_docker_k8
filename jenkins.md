@@ -131,3 +131,84 @@ Change mkdir line to `sh 'mkdir -p build'`. `-p` creates the directory and any n
 Build is successful. 
 
 ![Imgur](https://i.imgur.com/o7Ae5yJ.png)
+
+Mainboard appears twice. Strange. The forst occurence is from the first execution, the second is from the recent execution.
+
+Some more commands have been added to the configuration:
+
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building a new laptop...'
+                sh 'mkdir -p build'
+                sh 'touch build/computer.txt'
+                sh 'echo "Mainboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Display" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Keyboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+            }
+        }
+    }
+}
+
+```
+
+Here is the output:
+
+![Imgur](https://i.imgur.com/EcMHjvB.png)
+
+### Reason for duplicate outputs
+
+Jenkins has a Workspace where it runs the build and saves the build result.
+
+![Imgur](https://i.imgur.com/1wSoOu9.png)
+
+One way to combat this is to configure the pipeline to remove the directory when starting a new build. This isn't always the best approach as there could be multiple files/directories in a build, so other builds could be affected.
+
+There is an instruction called clean workspace. This would be a post-build action.
+
+In a post-build action we can specify actions to take place for example if a build fails or if it's successful.
+
+To clean the workspace after every build:
+
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building a new laptop...'
+                sh 'mkdir -p build'
+                sh 'touch build/computer.txt'
+                sh 'echo "Mainboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Display" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Keyboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
+
+```
+
+The immediate output still has the duplicate displays, but has the clean workspace action:
+
+![Imgur](https://i.imgur.com/RBK9kl2.png)
+
+Here is the following build:
+
+![Imgur](https://i.imgur.com/OvrCiDb.png)
