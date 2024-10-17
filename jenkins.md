@@ -169,7 +169,7 @@ Jenkins has a Workspace where it runs the build and saves the build result.
 
 ![Imgur](https://i.imgur.com/1wSoOu9.png)
 
-One way to combat this is to configure the pipeline to remove the directory when starting a new build. This isn't always the best approach as there could be multiple files/directories in a build, so other builds could be affected.
+One way to combat the duplicates is to configure the pipeline to remove the directory when starting a new build. This isn't always the best approach as there could be multiple files/directories in a build, so other builds could be affected.
 
 There is an instruction called clean workspace. This would be a post-build action.
 
@@ -212,3 +212,46 @@ The immediate output still has the duplicate displays, but has the clean workspa
 Here is the following build:
 
 ![Imgur](https://i.imgur.com/OvrCiDb.png)
+
+## Artifacts
+
+The file created in `build/` is called an Artifact. When we clean the workspace at the end of each build, we want to keep the artifact.
+
+This instruction can be added to the configuration.
+
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building a new laptop...'
+                sh 'mkdir -p build'
+                sh 'touch build/computer.txt'
+                sh 'echo "Mainboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Display" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Keyboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'build/**'
+        }
+        always {
+            cleanWs()
+        }
+    }
+}
+
+```
+
+`build/**` denotes everything in the build directory.
+
+Running this produces an error with this output:
+
+![Imgur](https://i.imgur.com/JhkCaDr.png)
