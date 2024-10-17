@@ -255,3 +255,46 @@ pipeline {
 Running this produces an error with this output:
 
 ![Imgur](https://i.imgur.com/JhkCaDr.png)
+
+From this we can see that the cleaning of the workspace happened **before** the request to archive the artifact, hence the error.
+
+In Jenkins, *always* commands run before *success/failure* commands. To combat this, we can add the clean workspace command to the start of the build.
+
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                cleanWs()
+                echo 'Building a new laptop...'
+                sh 'mkdir -p build'
+                sh 'touch build/computer.txt'
+                sh 'echo "Mainboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Display" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+                sh 'echo "Keyboard" >> build/computer.txt'
+                sh 'cat build/computer.txt'
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'build/**'
+        }
+    }
+}
+
+```
+
+Here is the console output:
+
+![Imgur](https://i.imgur.com/Hen0Kvu.png)
+...
+![Imgur](https://i.imgur.com/kQ71EsR.png)
+
+The artifact is shown in the buid status:
+
+![Imgur](https://imgur.com/9UkcGbX,png)
