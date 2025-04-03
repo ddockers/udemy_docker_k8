@@ -62,7 +62,7 @@ Save and build now. Here is the console output:
 
 ![Imgur](https://imgur.com/ay0E9P3.png)
 
-The pipeline is used to keep track of changes. Instead of ```echo 'Hello World' ``` I can chance it to:
+The pipeline is used to keep track of changes. Instead of ```echo 'Hello World' ``` I can change it to:
 
 ```
 sh 'echo "Hello World"'
@@ -132,7 +132,7 @@ Build is successful.
 
 ![Imgur](https://i.imgur.com/o7Ae5yJ.png)
 
-Mainboard appears twice. Strange. The forst occurence is from the first execution, the second is from the recent execution.
+Mainboard appears twice. Strange. The first occurence is from the first execution, the second is from the recent execution.
 
 Some more commands have been added to the configuration:
 
@@ -298,3 +298,9 @@ Here is the console output:
 The artifact is shown in the buid status:
 
 ![Imgur](https://imgur.com/9UkcGbX,png)
+
+## Manually interrupting the pipeline execution
+
+Jobs that encounter problems sometimes need to be stopped manually.
+
+A way to demonstrate how this is done is to add a sleep command to the shell script.
